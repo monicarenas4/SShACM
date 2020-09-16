@@ -1,4 +1,4 @@
-**[Reference images](https://github.com/monicarenas4/SShImageProcessing/tree/master/referenceImages):** coming from 10 different droplet tags.
+**[Reference images](https://github.com/monicarenas4/SShACM/tree/master/referenceImages):** coming from 10 different droplet tags.
 1. image_228.jpg
 1. image_618.jpg
 1. image_852.jpg
