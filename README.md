@@ -15,7 +15,7 @@
 ### Experiments, Scores, and Evaluation
 From each *reference image* were generated around 200 mutated images (folder: **mutatedImages**).
  Example of [mutated images](https://github.com/monicarenas4/SShImageProcessing/tree/master/mutatedImages/Image_1104):
-![alt text](https://github.com/monicarenas4/SShImageProcessing/blob/master/RefMut.png)
+![alt text](https://github.com/monicarenas4/SShACM/blob/master/RefMut.png)
 We generated a set of 1000 simulated tags, listed in *simulatedTag* folder. 
 
 ### Validation
