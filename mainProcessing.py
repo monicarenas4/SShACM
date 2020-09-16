@@ -1,4 +1,3 @@
-import numpy
 import time
 import datetime
 from scoreAlign import alignScore
