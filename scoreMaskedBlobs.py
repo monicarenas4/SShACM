@@ -93,7 +93,7 @@ def maskedScore(retake, reference, threshold=3, corner=2):
                     count_no_color += 1
 
     scorecolor = (2 * count_color) / (m1 + m2)
-    print(scorecolor)
+    # print(scorecolor)
 
     with open(txtFile, 'a') as results_file:
         results_file.write(
