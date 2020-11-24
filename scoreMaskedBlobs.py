@@ -11,8 +11,9 @@ GOOD_MATCH_PERCENT = 0.15
 today = str(datetime.datetime.today())
 
 results_Path = 'results'
-type = 'mutatedImages'
+type = 'retakenImages'
 txtFile = results_Path + '/' + today[:10] + '_' + type + '.txt'
+
 
 def maskedscore(f1, f2):
     threshold = 3;
