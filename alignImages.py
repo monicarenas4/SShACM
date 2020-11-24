@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jun 17 10:15:31 2020
-@author: huseyin.demirci
-"""
-
 from __future__ import print_function
 import cv2
 import numpy as np
