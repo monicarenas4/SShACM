@@ -14,7 +14,7 @@ import numpy as np
 today = str(datetime.datetime.today())
 results_Path = 'results'
 type = 'mutatedImages'
-txtFile = results_Path + '/' + today[:10] + type + '.txt'
+txtFile = results_Path + '/' + today[:10] + '_' + type + '.txt'
 
 
 def alignScore(f1, f2, cp):
