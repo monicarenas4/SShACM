@@ -5,7 +5,6 @@ import datetime
 from alignImages import alignImages
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
-from skimage.measure import compare_ssim as ssim
 
 MAX_FEATURES = 1000
 GOOD_MATCH_PERCENT = 0.15
@@ -13,8 +12,7 @@ today = str(datetime.datetime.today())
 
 results_Path = 'results'
 type = 'mutatedImages'
-# type = 'SimulatedTags'
-txtFile = results_Path + '/' + 'Results_' + type + '_' + today[:10] + '.txt'
+txtFile = results_Path + '/' + today[:10] + type + '.txt'
 
 
 def maskedscore(f1, f2):
