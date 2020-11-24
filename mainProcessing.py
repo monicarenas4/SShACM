@@ -11,7 +11,7 @@ today = str(datetime.datetime.today())
 refPath = 'referenceImages'
 results_Path = 'results'
 type = 'mutatedImages'
-txtFile = results_Path + '/' + 'Results_' + type + '_' + today[:10] + '.txt'
+txtFile = results_Path + '/' + today[:10] + type + '.txt'
 
 referenceFolder = [f for f in listdir(refPath) if isfile(join(refPath, f))]
 
@@ -27,7 +27,7 @@ for refFolder in referenceFolder:
         finish = time.perf_counter()
         print(m, referenceImage[m], f'{finish - start:0.2f}', f'{finish:0.2f}')
 
-        with open(txtFile, 'a') as results_file:
-            results_file.write(str(m + 1) + '\t' + f'{finish - start:0.2f}' + '\t')
+        # with open(txtFile, 'a') as results_file:
+        #     results_file.write(str(m + 1) + '\t' + f'{finish - start:0.2f}' + '\t')
 
-print(time.perf_counter())
+# print(time.perf_counter())
