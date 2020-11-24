@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from numpy import power as pw
 import datetime
+import re
 
 from alignImages import alignImages
 from skimage.feature import blob_log
@@ -96,9 +97,13 @@ def maskedScore(retake, reference, threshold=3, corner=2):
     # print(scorecolor)
 
     with open(txtFile, 'a') as results_file:
+        name_ref = [m.start() for m in re.finditer(r"/", reference)][-1]
+        name_ret = [m.start() for m in re.finditer(r"/", retake)][-1]
+
         results_file.write(
-            reference[reference.find('/') + 1:] + '\t' + retake[retake.find('/') + 1:] + '\t' + str(m1) + '\t' + str(
-                m2) + '\t' + str(
-                count_detected) + '\t' + str(scorecolor) + '\t')
+            reference[name_ref + 1:] + '\t' +
+            retake[name_ret + 1:] + '\t' +
+            str(m1) + '\t' + str(m2) + '\t' +
+            str(count_detected) + '\t' + str(scorecolor) + '\t')
 
     return (scorecolor)
