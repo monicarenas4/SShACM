@@ -11,7 +11,7 @@ today = str(datetime.datetime.today())
 refPath = 'referenceImages'
 results_Path = 'results'
 type = 'mutatedImages'
-txtFile = results_Path + '/' + today[:10] + type + '.txt'
+txtFile = results_Path + '/' + today[:10] + '_' + type + '.txt'
 
 referenceFolder = [f for f in listdir(refPath) if isfile(join(refPath, f))]
 
