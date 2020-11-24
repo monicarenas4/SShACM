@@ -1,4 +1,4 @@
-## Reference and mutated images
+# Reference and mutated images
 The [reference images](https://github.com/monicarenas4/SShParallelComputing/tree/master/referenceImages)
 are composed by colored blobs distributed randomly.
 In order to simulate [retaken images](https://github.com/monicarenas4/SShParallelComputing/tree/master/mutatedImages) 
@@ -7,38 +7,12 @@ images. Thus, each _reference images_ was resized,
 rotated, cropped, and blurred.
 
 
-## Problems
-### Global parallelization
-Hundred of retaken images (`b_i`) are compared with a reference image (`a`) 
-in order to measure if the retaken images are authentic.
-In the current implementation, the __sequential execution time__ for analyzing each
-pair of images takes around `25 s`. Thus, when analyzing `1000` pair of images the total
-execution time is approx. 7h.
-However, it is desired to parallelize this process to reduce the computational cost.
-One proposal is to split the set of retaken images in different dataset and run in parallel
-in order to optimize the total execution time.
-
-### Local paralellization
-It is also important to parallelize the local function `Match[a,b]` in order to reduce the 
-computational time for matching each pair of images;
-that as stated above, each process takes approx. `25 s`.
-
-Let's assume a defined grid structure 
-`g = [g_1,..,g_k]`, which is basically a tiling of the rectangular space. 
-Thus, `a` and `b` are grids. 
-We can say that g is like a puzzle, the grid making a puzzle out of `a` and `b`.
-Let call this `GridOf[a] = <g_1(a),...,g_k(a)>` which is the sequence of pieces of `a`,
-cut according to the grid.
-Thus, it is also proposed to parallelize the process of matching by checking
-if all pieces do match: `Match[a,b] = Match_{Piece}[g_i(a),g_i(b)]`.
-
-
 # Alignment Implementation
 This implementation is based on image processing algorithms for:
 - Estimating the alignment between retake and reference images: `align(imRetake, imReference)`;
 - Computing the scores related to the blobs position and color detection. 
 
-## Alignment
+## Alignment function
 The Homography matrix (3×3) is at the heart of image alignment techniques.
 A Homography matrix is a transformation that maps the keypoints
 of one image to the corresponding points in the other image.
@@ -71,7 +45,7 @@ imdiff = imAligned - imReference
 alignScore = 1 - nonzero(imdiff) / size(imdiff)
 ``` 
 
-### Counting blobs and color detection
+## Counting blobs and color detection
 - The reference image is transformed in gray scale. 
     - The number of blobs are detected. 
     - The blobs located at the corners are eliminated (∓ 2 pixel). 
@@ -89,3 +63,30 @@ if {min(euclideanDistance) < threshold} => blob_detected
 ```python
 scorecolor = (2 * count_color) / (m1 + m2)
 ```
+
+# Problems
+### Global parallelization
+Hundred of retaken images (`imRetake_i`) are compared with a reference image (`imReference`) 
+in order to measure if the retaken images are authentic.
+In the current implementation, the __sequential execution time__ for analyzing each
+pair of images takes around `25 s`. Thus, when analyzing `1000` pair of images the total
+execution time is approx. 7h.
+However, it is desired to parallelize this process to reduce the computational cost.
+One proposal is to split the set of retaken images in different dataset and run in parallel
+in order to optimize the total execution time.
+
+### Local paralellization
+It is also important to parallelize the local function `Match(imRetake, imReference)`
+in order to reduce the 
+computational time for matching each pair of images;
+that as stated above, each process takes approx. `25 s`.
+
+Let's assume a defined grid structure 
+`g = [g_1,..,g_k]`, which is basically a tiling of the rectangular space. 
+Thus, `imRetake` and `imReference` are grids. 
+We can say that g is like a puzzle, the grid making a puzzle out of `imRetake` and `imReference`.
+Let call this `GridOf[imRetake] = <g_1(a),...,g_k(a)>` which is the sequence of pieces of `imRetake`,
+cut according to the grid.
+Thus, it is also proposed to parallelize the process of matching by checking
+if all pieces do match: `Match(imRetake, imReference) = Match_Part[g_i(a),g_i(b)]`.
+
