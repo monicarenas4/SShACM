@@ -7,7 +7,6 @@ Created on Wed Jun 17 10:15:31 2020
 from __future__ import print_function
 from alignImages import alignImages
 import cv2
-import concurrent.futures
 import datetime
 import time
 import numpy as np
@@ -15,8 +14,7 @@ import numpy as np
 today = str(datetime.datetime.today())
 results_Path = 'results'
 type = 'mutatedImages'
-# type = 'SimulatedTags'
-txtFile = results_Path + '/' + 'Results_' + type + '_' + today[:10] + '.txt'
+txtFile = results_Path + '/' + today[:10] + type + '.txt'
 
 
 def alignScore(f1, f2, cp):
