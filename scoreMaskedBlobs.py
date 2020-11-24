@@ -12,8 +12,7 @@ today = str(datetime.datetime.today())
 
 results_Path = 'results'
 type = 'mutatedImages'
-txtFile = results_Path + '/' + today[:10] + type + '.txt'
-
+txtFile = results_Path + '/' + today[:10] + '_' + type + '.txt'
 
 def maskedscore(f1, f2):
     threshold = 3;
