@@ -9,11 +9,11 @@ GOOD_MATCH_PERCENT = 0.15
 def alignImages(retake, reference):
     # imRetake = cv2.imread(retake, cv2.IMREAD_COLOR)  # Read reference image
     gray_retake = cv2.cvtColor(retake, cv2.COLOR_BGR2GRAY)
-    print(gray_retake.shape)
+    # print(gray_retake.shape)
 
     # imReference = cv2.imread(reference, cv2.IMREAD_COLOR)  # Read image to be aligned
     gray_reference = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
-    print(gray_reference.shape)
+    # print(gray_reference.shape)
 
     # Detect ORB features and compute descriptors
     orb = cv2.ORB_create(MAX_FEATURES)
@@ -45,6 +45,6 @@ def alignImages(retake, reference):
 
     height, width, channels = reference.shape
     imAlign = cv2.warpPerspective(retake, h, (width, height))
-    print(imAlign.shape)
+    # print(imAlign.shape)
 
     return imAlign, h
