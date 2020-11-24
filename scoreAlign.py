@@ -21,7 +21,7 @@ def alignScore(retake, reference, cp):
     # plt.imshow(imdiff), plt.show()
     score1 = 1 - np.count_nonzero(imdiff) / imdiff.size
     score2 = (imdiff < cp).sum() / imdiff.size
-    print(score1, score2)
+    # print(score1, score2)
 
     with open(txtFile, 'a') as results_file:
         results_file.write(str(score1) + '\n')
