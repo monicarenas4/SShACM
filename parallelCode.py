@@ -27,8 +27,11 @@ GOOD_MATCH_PERCENT = 0.15
 
 
 def alignImages(retake, reference):
-    gray_retake = cv2.cvtColor(retake, cv2.COLOR_BGR2GRAY)
     gray_reference = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
+    height, width, channels = reference.shape
+
+    # imRetake = cv2.resize(retake, (width, height), interpolation=cv2.INTER_AREA)
+    gray_retake = cv2.cvtColor(retake, cv2.COLOR_BGR2GRAY)
 
     # Detect ORB features and compute descriptors
     orb = cv2.ORB_create(MAX_FEATURES)
@@ -54,7 +57,6 @@ def alignImages(retake, reference):
 
     h, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
 
-    height, width, channels = reference.shape
     imAlign = cv2.warpPerspective(retake, h, (width, height))
 
     return imAlign, h
