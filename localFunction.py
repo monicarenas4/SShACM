@@ -1,9 +1,6 @@
 from __future__ import print_function
 import multiprocessing as mp
-from multiprocessing import Pool
 from numpy import power as pw
-from os import listdir
-from os.path import join, isfile
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
 
@@ -15,20 +12,21 @@ import time
 import matplotlib.pyplot as plt
 
 today = str(datetime.datetime.today())
-refPath = 'referenceImages'
 results_Path = 'results'
 type = 'retakenImages'
-txtFile = results_Path + '/' + today[:10] + '_' + type + '.txt'
-
-referenceFolder = [f for f in listdir(refPath) if isfile(join(refPath, f))]
+testImage = "Image_228"
+txtFile = results_Path + '/' + today[:10] + '_localFn_' + type + '.txt'
 
 MAX_FEATURES = 1000
 GOOD_MATCH_PERCENT = 0.15
 
 
 def alignImages(retake, reference):
-    gray_retake = cv2.cvtColor(retake, cv2.COLOR_BGR2GRAY)
     gray_reference = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
+    height, width, channels = reference.shape
+
+    # imRetake = cv2.resize(retake, (width, height), interpolation=cv2.INTER_AREA)
+    gray_retake = cv2.cvtColor(retake, cv2.COLOR_BGR2GRAY)
 
     # Detect ORB features and compute descriptors
     orb = cv2.ORB_create(MAX_FEATURES)
@@ -54,15 +52,12 @@ def alignImages(retake, reference):
 
     h, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
 
-    height, width, channels = reference.shape
     imAlign = cv2.warpPerspective(retake, h, (width, height))
 
     return imAlign, h
 
 
-
 def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
-    # ts = time.time()
     imgReference = cv2.imread(reference, cv2.IMREAD_COLOR)
     Ref_y, Ref_x, Ref_z = imgReference.shape
     gray_reference = rgb2gray(imgReference)
@@ -102,8 +97,6 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
     det_blobs_ref = (np.zeros([Ref_y, Ref_x, Ref_z])).astype(np.uint8)
     for i in range(0, m1):
         cv2.circle(det_blobs_ref, (b1[i][1], b1[i][0]), b1[i][2], [255, 255, 255], -5)
-    # plt.imshow(det_blobs_ref), plt.show()
-    # cv2.imwrite('detected_blobs_ref.jpg', det_blobs_ref)  # Write the detected blobs
 
     det_blobs_align = (np.zeros([imAlg_y, imAlg_x, imAlg_z])).astype(np.uint8)
     for i in range(0, m2):
@@ -156,54 +149,31 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
             str(count_detected) + '\t' +
             str(scorecolor) + '\t' +
             str(score1) + '\t' +
-            str(score2) + '\n' )
-            # +   )  +
-            # f'{time.time() - ts}' + '\n')
+            str(score2) + '\n')
+        # +   )  +
+        # f'{time.time() - ts}' + '\n')
 
     return (score1, score2, scorecolor)
 
 
-# def result_alignScore(score1, score2, scorecolor):
 def result_alignScore(score1):
-    # global align, blob, masked
     global align
     align.append(score1)
-    # blob.append(score2)
-    # masked.append(scorecolor)
 
 
 if __name__ == '__main__':
-    # folderName = type + '/' + 'Image_618'
-    for refFolder in referenceFolder:
-        if refFolder == "Image_975.jpg":
-            ts1 = time.time()
-            # folderName = type + '/' + refFolder[:-4]
-            folderName = 'quick' + '/' + refFolder[:-4]
-            retakeImages = [f for f in listdir(folderName) if isfile(join(folderName, f))]
-            align = []
-            blob = []
-            masked = []
+    ts1 = time.time()
+    folderPath = type + '/' + testImage
+    referenceImage = folderPath + "/" + testImage + ".jpg"
+    retakenImage = folderPath + "/" + "Image_228_scaled_94_crop_3_8_rot_354_blur_1_1.jpg"
 
-            pool = mp.Pool(6)
-            # pool = mp.Pool(mp.cpu_count())
+    align = []
 
-            for imageName in retakeImages:
-                # referenceImage = folderName + '.jpg'
-                ts2 = time.time()
-                referenceImage = refFolder
+    pool = mp.Pool(4)
+    pool.apply_async(scoresFunction, args=(retakenImage, referenceImage),
+                     callback=result_alignScore)
 
-                pool.apply_async(scoresFunction, args=(folderName + '/' + imageName,
-                                                       folderName + '/' + referenceImage),
-                                 callback=result_alignScore)
-
-                # pool.apply_async(maskedScore, args=(folderName + '/' + imageName,
-                #                                     folderName + '/' + referenceImage),
-                #                  callback=result_maskedScore)
-
-                # print(imageName, 'Par. time:', time.time() - ts, 's')
-
-            pool.close()
-            pool.join()
-            print(time.time() - ts2)
+    pool.close()
+    pool.join()
 
     print(time.time() - ts1)
