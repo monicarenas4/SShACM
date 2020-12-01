@@ -1,5 +1,6 @@
 from __future__ import print_function
 import multiprocessing as mp
+from math import ceil
 from numpy import power as pw
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
@@ -15,6 +16,11 @@ today = str(datetime.datetime.today())
 results_Path = 'results'
 type = 'retakenImages'
 testImage = "Image_228"
+
+folderPath = type + '/' + testImage
+referenceImage = folderPath + "/" + testImage + ".jpg"
+retakenImage = folderPath + "/" + "Image_228_scaled_94_crop_3_8_rot_354_blur_1_1.jpg"
+
 txtFile = results_Path + '/' + today[:10] + '_localFn_' + type + '.txt'
 
 MAX_FEATURES = 1000
@@ -58,6 +64,7 @@ def alignImages(retake, reference):
 
 
 def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
+    ts1 = time.time()
     imgReference = cv2.imread(reference, cv2.IMREAD_COLOR)
     Ref_y, Ref_x, Ref_z = imgReference.shape
     gray_reference = rgb2gray(imgReference)
@@ -149,31 +156,15 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
             str(count_detected) + '\t' +
             str(scorecolor) + '\t' +
             str(score1) + '\t' +
-            str(score2) + '\n')
-        # +   )  +
-        # f'{time.time() - ts}' + '\n')
+            str(score2) + '\t' +
+            # +   )  +
+            f'{time.time() - ts1}' + '\n')
+
+    # print(time.time() - ts1)
 
     return (score1, score2, scorecolor)
 
 
-def result_alignScore(score1):
-    global align
-    align.append(score1)
-
-
-if __name__ == '__main__':
-    ts1 = time.time()
-    folderPath = type + '/' + testImage
-    referenceImage = folderPath + "/" + testImage + ".jpg"
-    retakenImage = folderPath + "/" + "Image_228_scaled_94_crop_3_8_rot_354_blur_1_1.jpg"
-
-    align = []
-
-    pool = mp.Pool(4)
-    pool.apply_async(scoresFunction, args=(retakenImage, referenceImage),
-                     callback=result_alignScore)
-
-    pool.close()
-    pool.join()
-
-    print(time.time() - ts1)
+ts = time.time()
+scoresFunction(retakenImage, referenceImage)
+print(f"{time.time() - ts}")
