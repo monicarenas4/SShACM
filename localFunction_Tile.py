@@ -1,27 +1,40 @@
 from __future__ import print_function
-import multiprocessing as mp
-from math import ceil
 from numpy import power as pw
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
 
 import cv2
 import datetime
+import multiprocessing as mp
 import numpy as np
-import re
 import time
-import matplotlib.pyplot as plt
 
 today = str(datetime.datetime.today())
-results_Path = 'results'
-type = 'retakenImages'
-testImage = "Image_228"
+results_Path = 'results/'
+type = '_localFunction_'
+txtFile = results_Path + today[:10] + type + 'Images.txt'
 
-folderPath = type + '/' + testImage
-referenceImage = folderPath + "/" + testImage + ".jpg"
-retakenImage = folderPath + "/" + "Image_228_scaled_94_crop_3_8_rot_354_blur_1_1.jpg"
+refImage = '/Image_228.jpg'
+folderName = 'dataset' + refImage[:-4]
+referenceImage = folderName + refImage
+retakenImage = folderName + '/Image_228_blur_2_scaled_107.jpg'
 
-txtFile = results_Path + '/' + today[:10] + '_localFunction' + '.txt'
+img_ref = cv2.resize(cv2.imread(referenceImage),
+                     (1600, 1200),
+                     interpolation=cv2.INTER_AREA)
+
+y_ref, x_ref, c_ref = img_ref.shape
+
+img_ret = cv2.resize(cv2.imread(retakenImage),
+                     (x_ref, y_ref),
+                     interpolation=cv2.INTER_AREA)
+
+cpus = range(1, mp.cpu_count() + 1)
+# cpus = range(1, 6)
+
+numrows, numcols = 2, 2
+height = int(img_ref.shape[0] / numrows)
+width = int(img_ref.shape[1] / numcols)
 
 MAX_FEATURES = 1000
 GOOD_MATCH_PERCENT = 0.15
@@ -115,7 +128,7 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
 
     for i in range(0, m1):
         hide = []
-        if m2 == 0:
+        if (m1 == 0) or (m2 == 0):
             scorecolor = 0
         else:
             for j in range(0, m2):
@@ -149,46 +162,55 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
 
     with open(txtFile, 'a') as results_file:
 
-        # name_ref = [m.start() for m in re.finditer(r"/", reference)][-1]
-        # name_ret = [m.start() for m in re.finditer(r"/", retake)][-1]
-
         results_file.write(
-            # reference[name_ref + 1:] + '\t' +
-            # retake[name_ret + 1:] + '\t' +
-            str(m1) + '\t' + str(m2) + '\t' +
+            f'{time.time() - ts1}' + '\t' +
+            str(m1) + '\t' +
+            str(m2) + '\t' +
             str(count_detected) + '\t' +
             str(scorecolor) + '\t' +
             str(score1) + '\t' +
-            str(score2) + '\t' +
-            # +   )  +
-            f'{time.time() - ts1}' + '\n')
-
-    # print(time.time() - ts1)
+            str(score2) + '\n')
 
     return (score1, score2, scorecolor)
 
 
-img_ref = cv2.imread(retakenImage)
-img_ref = cv2.resize(img_ref, (512, 512), interpolation=cv2.INTER_CUBIC)
-y_ref, x_ref, c_ref = img_ref.shape
+def result_alignScore(score1):
+    global align
+    align.append(score1)
 
-img_ret = cv2.imread(retakenImage)
-img_ret = cv2.resize(img_ret, (512, 512), interpolation=cv2.INTER_CUBIC)
-y_ret, x_ret, c_ret = img_ret.shape
 
-tile_size = (256, 256)
-offset = (256, 256)
+if __name__ == '__main__':
+    ts1 = time.time()
+    align = []
 
-ts = time.time()
-for i in range(ceil(x_ref / (offset[1] * 1.0))):
-    for j in range(ceil(y_ref / (offset[0] * 1.0))):
-        tile_ref = img_ref[offset[1] * i:min(offset[1] * i + tile_size[1], y_ref),
-                   offset[0] * j:min(offset[0] * j + tile_size[0], x_ref)]
-        tile_ret = img_ret[offset[1] * i:min(offset[1] * i + tile_size[1], y_ret),
-                   offset[0] * j:min(offset[0] * j + tile_size[0], x_ret)]
-        scoresFunction(tile_ret, tile_ref)
-        # Debugging the tiles
-        # plt.imshow(tile_ref), plt.show()
-        # plt.imshow(tile_ret), plt.show()
+    for cpu in cpus:
+        pool = mp.Pool(cpu)
 
-print(f'{time.time() - ts}')
+        for row in range(numrows):
+            ts2 = time.time()
+            for col in range(numcols):
+                y0 = row * height
+                y1 = y0 + height
+                x0 = col * width
+                x1 = x0 + width
+                ref = img_ref[y0:y1, x0:x1]
+                ret = img_ret[y0:y1, x0:x1]
+
+                # cv2.imwrite('tile/tileRef_%d%d.jpg' % (row, col), ref)
+                # cv2.imwrite('tile/tileRet_%d%d.jpg' % (row, col), ret)
+
+                pool.apply_async(scoresFunction,
+                                 args=(ret, ref),
+                                 callback=result_alignScore)
+
+        pool.close()
+        pool.join()
+
+        parFile = results_Path + today[:10] + type + 'Time.txt'
+        with open(parFile, 'a') as par_file:
+
+            par_file.write(
+                str(cpu) + '\t' +
+                str(round((time.time() - ts2), 2)) + '\n')
+
+        print((time.time() - ts2), 'seconds')
