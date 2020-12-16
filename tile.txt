@@ -1,0 +1,15 @@
+https://stackoverflow.com/questions/45950124/creating-image-tiles-mn-of-original-image-using-python-and-numpy
+
+https://towardsdatascience.com/modern-parallel-and-distributed-python-a-quick-tutorial-on-ray-99f8d70369b8
+
+https://grid.rcs.hbs.org/parallel-python
+
+https://stackoverflow.com/questions/55754501/multiprocessing-on-chunks-of-an-image
+
+https://sarahelson81.medium.com/pytest-tutorial-parallel-testing-with-selenium-grid-lambdatest-6f30719e09b4
+
+https://wiki.python.org/moin/ParallelProcessing
+
+https://stackoverflow.com/questions/34940529/fastest-method-of-splitting-image-into-tiles
+
+
