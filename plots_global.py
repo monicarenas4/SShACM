@@ -11,7 +11,7 @@ rng = [40, 80, 120, 160, 200, 240, 280, 320]
 lines = ["-", "--", "-.", ":"]
 linecycler = cycle(lines)
 
-file_complex = 'results/2020-12-15_globalFunction_Images.txt'
+file_complex = 'results/2020-12-17_globalFunction_Images_MPI.txt'
 df_complex = pd.read_csv(file_complex, delimiter='\t')
 time_per_image = (df_complex['time']).to_numpy()
 val1 = round((cumsum(time_per_image[:setValue]))[-1], 2)
@@ -37,7 +37,7 @@ plt.legend(fontsize=12)
 plt.title('Complexity')
 plt.show()
 
-file_time = 'results/2020-12-15_globalFunction_Time.txt'
+file_time = 'results/2020-12-17_globalFunction_Time_MPI.txt'
 
 df_par = pd.read_csv(file_time, delimiter='\t')
 cpu = df_par['cpus']
@@ -51,5 +51,5 @@ plt.grid()
 plt.xlabel('Number of CPUs', fontsize=12)
 plt.ylabel('Time (s)', fontsize=12)
 plt.legend(fontsize=12)
-plt.title('Execution time depending on the number of cores')
+plt.title('Execution time depending on the number of cores using MPI')
 plt.show()

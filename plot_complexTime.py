@@ -11,7 +11,7 @@ rng = range(4, 34, 4)
 lines = ["-", "--", "-.", ":"]
 linecycler = cycle(lines)
 
-file_complex = 'results/2020-12-16_localFunction_Images.txt'
+file_complex = 'results/2020-12-16_localFunction_Images_MPI.txt'
 df_complex = pd.read_csv(file_complex, delimiter='\t')
 time_per_image = (df_complex['time']).to_numpy()
 val1 = round((cumsum(time_per_image[:setValue+1]))[-1], 2)
@@ -33,5 +33,5 @@ plt.xticks(range(len(rng1)), rng1)
 plt.xlabel('Problem size (# tile images)', fontsize=12)
 plt.ylabel('Time (s)', fontsize=12)
 plt.legend(fontsize=12)
-plt.title('Time Complexity for the local function')
+plt.title('Time Complexity for the local function running with MPI')
 plt.show()

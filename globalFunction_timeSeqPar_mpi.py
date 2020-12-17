@@ -5,6 +5,7 @@ from os.path import join, isfile
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
 
+from mpipool import Pool
 from mpi4py import MPI
 from mpi4py.futures import MPIPoolExecutor
 
@@ -205,13 +206,12 @@ if __name__ == '__main__':
     rank = comm.Get_rank()
     num_workers = max(size, size - 1)
     executor = MPIPoolExecutor(num_workers)
-    print(str(rank) +'/'+ str(size))
-
     for cpu in cpus:
-
+        count = 0
+        print(str(rank) +'/'+ str(size)+" / running")
         for imageName in retakeImages[:n_samples]:
             ts2 = time.time()
-            future = executor.submit(scoresFunction,[folderName + '/' + imageName], [folderName + '/' + referenceImage], result_alignScore)
+            future = executor.submit(scoresFunction("dataset/Image_228/"+imageName, "dataset/Image_228/Image_228.jpg"),result_alignScore)
 
         parFile = results_Path + today[:10] + type + 'Time_MPI.txt'
         with open(parFile, 'a') as par_file:

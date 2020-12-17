@@ -203,7 +203,7 @@ if __name__ == '__main__':
 
         for imageName in retakeImages[:n_samples]:
             ts2 = time.time()
-
+            print(folderName + '/' + imageName +" test "+referenceImage)
             pool.apply_async(scoresFunction, args=(folderName + '/' + imageName,
                                                    referenceImage),
                              callback=result_alignScore)

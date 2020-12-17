@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-global_time = 'results/2020-12-15_globalFunction_Time.txt'
-local_time = 'results/2020-12-15_localFunction_Time.txt'
+global_time = 'results/2020-12-15_globalFunction_Time_MPI.txt'
+local_time = 'results/2020-12-15_localFunction_Time_MPI.txt'
 
 df_glob = pd.read_csv(global_time, delimiter='\t')
 df_loc = pd.read_csv(local_time, delimiter='\t')

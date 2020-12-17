@@ -3,6 +3,7 @@ from numpy import power as pw
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
 
+from mpipool import Pool
 from mpi4py import MPI
 from mpi4py.futures import MPIPoolExecutor
 
@@ -32,7 +33,7 @@ img_ret = cv2.resize(cv2.imread(retakenImage),
                      (x_ref, y_ref),
                      interpolation=cv2.INTER_AREA)
 
-cpus = range(1, mp.cpu_count() + 1)
+#cpus = range(1, mp.cpu_count() + 1)
 # cpus = range(1, 6)
 
 numrows, numcols = 2, 2
@@ -185,14 +186,14 @@ def result_alignScore(score1):
 if __name__ == '__main__':
     ts1 = time.time()
     align = []
-    
+
     comm = MPI.COMM_WORLD
     size = comm.Get_size()
     rank = comm.Get_rank()
     num_workers = max(size, size - 1)
+    cpus = range(1, size + 1)
     executor = MPIPoolExecutor(num_workers)
-    print(str(rank) +'/'+ str(size))
-    
+
     for cpu in cpus:
     
         for row in range(numrows):
@@ -205,9 +206,7 @@ if __name__ == '__main__':
                 ref = img_ref[y0:y1, x0:x1]
                 ret = img_ret[y0:y1, x0:x1]
 
-                # cv2.imwrite('tile/tileRef_%d%d.jpg' % (row, col), ref)
-                # cv2.imwrite('tile/tileRet_%d%d.jpg' % (row, col), ret)
-                future = executor.submit(scoresFunction,[ret,ref], result_alignScore)
+                future = executor.submit(scoresFunction(ret, ref),result_alignScore)
 
         parFile = results_Path + today[:10] + type + 'Time_MPI.txt'
         with open(parFile, 'a') as par_file:
