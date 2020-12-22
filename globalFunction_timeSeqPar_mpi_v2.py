@@ -4,8 +4,12 @@ from os import listdir
 from os.path import join, isfile
 from skimage.feature import blob_log
 from skimage.color import rgb2gray
+from schwimmbad import SerialPool
+from mpipool import Pool
 from mpi4py import MPI
-from schwimmbad import MPIPool
+from mpi4py.futures import MPIPoolExecutor
+from schwimmbad import JoblibPool
+
 import cv2
 import datetime
 import multiprocessing as mp
@@ -13,12 +17,11 @@ import numpy as np
 import re
 import time
 
-cpus = range(1, mp.cpu_count() + 1)
+#cpus = range(1, mp.cpu_count() + 1)
 # cpus = range(1, 3)
 n_samples = 40
 MAX_FEATURES = 1000
 GOOD_MATCH_PERCENT = 0.15
-
 
 numbers = re.compile(r'(\d+)')
 
@@ -194,31 +197,34 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
 def result_alignScore(score1):
     global align
     align.append(score1)
-
-
+def call_method():
+    for imageName in retakeImages[:n_samples]:
+        scoresFunction("dataset/Image_228/"+imageName, "dataset/Image_228/Image_228.jpg")
 if __name__ == '__main__':
-    ts1 = MPI.Wtime()
+    ts1 = time.time()
     align = []
     comm = MPI.COMM_WORLD
     size = comm.Get_size()
     rank = comm.Get_rank()
-    print(rank)
     num_workers = max(size, size - 1)
-    for cpu in cpus:
-        pool = MPIPool()
-        for imageName in retakeImages[:n_samples]:
-            ts2 = MPI.Wtime()
-            pool.map(scoresFunction(folderName + '/' + imageName, referenceImage),[],result_alignScore)
-            print(folderName + '/' + imageName +" test "+referenceImage)
+    executor = MPIPoolExecutor(num_workers)
+    cpus = range(1, size + 1)
+    #print(str(mp.cpu_count()) + " / cpu count")
+    pool = SerialPool()
+    #for cpu in cpus:
+    for imageName in retakeImages[:n_samples]:
+        ts2 = time.time()
+        pool.map(scoresFunction(folderName + '/' + imageName, referenceImage),[None, None],result_alignScore)
+        print(folderName + '/' + imageName +" test "+referenceImage)
+        #
+    pool.close()
 
-        pool.close()
+    parFile = results_Path + today[:10] + type + 'Time_MPI_4.txt'
+    with open(parFile, 'a') as par_file:
 
-        parFile = results_Path + today[:10] + type + 'Time_MPI_4.txt'
-        with open(parFile, 'a') as par_file:
+        par_file.write(
+            str(n_samples) + '\t' +
+            str(rank+1) + '\t' +
+            str(round((time.time() - ts2), 2)) + '\n')
 
-            par_file.write(
-                str(n_samples) + '\t' +
-                str(cpu) + '\t' +
-                str(round((MPI.Wtime() - ts2), 2)) + '\n')
-
-        print((MPI.Wtime() - ts2) / 60, 'minutes')
+    print((time.time() - ts2) / 60, 'minutes')
