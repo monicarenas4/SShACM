@@ -27,6 +27,7 @@ def numerical_sort(value):
     return parts
 
 
+
 ref_image = '/Image_228.jpg'
 folder_name = 'dataset' + ref_image[:-4]
 reference_image = folder_name + ref_image
