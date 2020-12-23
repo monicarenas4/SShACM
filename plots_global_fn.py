@@ -21,7 +21,7 @@ val2 = round((cumsum(time_per_image[280:306]))[-1] / cores, 2)
 a = 0
 for ln in range(len(rng)):
     cpu_time = (cumsum(time_per_image[a:rng[ln]]) / (ln + 1))
-    plt.plot(cpu_time, next(linecycler), label='CPUs = ' + str(ln + 1))
+    plt.plot(cpu_time, next(linecycler), label='Cores = ' + str(ln + 1))
     a = rng[ln]
 
 plt.axvline(x=setValue, color='red', linestyle='-.')
