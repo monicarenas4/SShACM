@@ -123,7 +123,7 @@ def scores_function(retake, reference, cp=5, threshold=3, corner=2):
         cv2.circle(det_blobs_align, (b2[i][1], b2[i][0]), b2[i][2], [255, 255, 255], -5)
     # plt.imshow(det_blobs_align), plt.show()
 
-    # # # # # # Blob Scores # # # # # #
+    # # # # Blob Scores # # # #
     count_detected, count_color, count_no_color = 0, 0, 0
 
     for i in range(0, m1):
