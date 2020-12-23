@@ -168,7 +168,7 @@ def scoresFunction(retake, reference, cp=5, threshold=3, corner=2):
 
     scorecolor = (2 * count_color) / (m1 + m2)
 
-    # # # # # # Alignment Scores # # # # # #
+    # # # # Alignment Scores # # # #
     imdiff = imAligned - imgReference
     score1 = 1 - np.count_nonzero(imdiff) / imdiff.size
     score2 = (imdiff < cp).sum() / imdiff.size
