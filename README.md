@@ -1,4 +1,4 @@
-# <font color="#00008b"> Reference and retaken images </font>
+# <font color="darkblue"> Reference and retaken images </font>
 Reference images are composed by colored blobs distributed randomly.
 In order to simulate retaken images
 some noise was introduced to the reference 
