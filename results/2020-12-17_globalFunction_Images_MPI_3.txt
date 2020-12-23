@@ -1,12 +1,4 @@
 reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
-reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
-reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
-reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
-Image_228.jpg	Image_228.jpg	18.36	41	41	41	1.0	1.0	1.0
-Image_228.jpg	Image_228.jpg	18.46	41	41	41	1.0	1.0	1.0
-Image_228.jpg	Image_228.jpg	18.5	41	41	41	1.0	1.0	1.0
-Image_228.jpg	Image_228.jpg	18.53	41	41	41	1.0	1.0	1.0
-reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
 Image_228.jpg	Image_228.jpg	19.29	41	41	41	1.0	1.0	1.0
 Image_228.jpg	Image_228.jpg	19.64	41	41	41	1.0	1.0	1.0
 Image_228.jpg	Image_228.jpg	19.68	41	41	41	1.0	1.0	1.0

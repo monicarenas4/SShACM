@@ -1,0 +1,3 @@
+reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
+Image_228.jpg	Image_228.jpg	21.04	41	41	41	1.0	1.0	1.0
+Image_228.jpg	Image_228_blur_1_scaled_90.jpg	20.9	41	41	39	0.9512195121951219	0.43366677451826285	0.7122857348288755

@@ -319,3 +319,6 @@ Image_228.jpg	Image_228_blur_2_scaled_104.jpg	16.64	41	41	39	0.9512195121951219	
 Image_228.jpg	Image_228_blur_2_scaled_105.jpg	16.61	41	41	40	0.975609756097561	0.43453947368421053	0.8046703336209375
 Image_228.jpg	Image_228_blur_2_scaled_106.jpg	16.78	41	40	40	0.9876543209876543	0.4569988495829739	0.8232021138912856
 Image_228.jpg	Image_228_blur_2_scaled_107.jpg	16.79	41	40	40	0.9876543209876543	0.43870092752372736	0.80747878918608
+reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
+reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
+reference	retake	time	m1	m2	count_detected	scorecolor	score1	score2
