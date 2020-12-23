@@ -11,6 +11,7 @@ cpu_loc = df_loc['cpus']
 time_glob = df_glob['time'] / 40
 time_loc = df_loc['time']
 
+
 def global_local_plot():
     plt.plot(cpu_glob, time_glob,
              linestyle='--', marker='o', color='tab:red',
